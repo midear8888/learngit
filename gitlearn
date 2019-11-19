@@ -1,0 +1,96 @@
+git reset --hard HEAD^
+git reset --hard commit_id。版本号前六位 回归到指定版本
+
+git reflog查看命令历史，以便确定要回到未来的哪个版本。
+
+git init 新建一个空的仓库
+
+git status 查看状态
+
+git add . 添加文件
+
+git commit -m '注释' 提交添加的文件并备注说明
+
+git remote add origin git@github.com:jinzhaogit/git.git 连接远程仓库
+
+git push -u origin master 将本地仓库文件推送到远程仓库
+
+git log 查看变更日志，显示从最近到最远的提交日志，如果嫌输出信息太多，看得眼花缭乱的，可以试试加上--pretty=oneline参数
+
+git branch 查看分支
+
+git branch newname 创建一个叫newname的分支
+
+git checkout newname 切换到叫newname的分支上
+git switch <name>
+git checkout -b <name>或者git switch -c <name> 创建+切换分支
+
+git merge newname 把newname分支合并到当前分支上
+
+git pull origin master 将master分支上的内容拉到本地上
+
+git branch -d <name> 删除分支。修复bug时，我们会通过创建新的bug分支进行修复，然后合并，最后删除。
+如果要丢弃一个没有被合并过的分支，可以通过git branch -D <name>强行删除。
+
+当手头工作没有完成时，先把工作现场git stash一下，然后去修复bug，修复后，再git stash pop，回到工作现场；
+
+在master分支上修复的bug，想要合并到当前dev分支，可以用git cherry-pick <commit>命令，把bug提交的修改“复制”到当前分支，避免重复劳动。
+
+
+多人协作模式小结：
+
+    首先，可以试图用git push origin <branch-name>推送自己的修改；
+
+    如果推送失败，则因为远程分支比你的本地更新，需要先用git pull试图合并；
+
+    如果合并有冲突，则解决冲突，并在本地提交；
+
+    没有冲突或者解决掉冲突后，再用git push origin <branch-name>推送就能成功！
+
+    如果git pull提示no tracking information，则说明本地分支和远程分支的链接关系没有创建，用命令git branch --set-upstream-to <branch-name> origin/<branch-name>。
+
+    查看远程库信息，使用git remote -v；
+
+    本地新建的分支如果不推送到远程，对其他人就是不可见的；
+
+    从本地推送分支，使用git push origin branch-name，如果推送失败，先用git pull抓取远程的新提交；
+
+    在本地创建和远程分支对应的分支，使用git checkout -b branch-name origin/branch-name，本地和远程分支的名称最好一致；
+
+    建立本地分支和远程分支的关联，使用git branch --set-upstream branch-name origin/branch-name；
+
+    从远程抓取分支，使用git pull，如果有冲突，要先处理冲突。
+	
+
+标签小结
+
+    命令git tag <tagname>用于新建一个标签，默认为HEAD，也可以指定一个commit id；
+
+    命令git tag -a <tagname> -m "blablabla..."可以指定标签信息；
+
+    命令git tag可以查看所有标签。
+
+    命令git push origin <tagname>可以推送一个本地标签；
+
+    命令git push origin --tags可以推送全部未推送过的本地标签；
+
+    命令git tag -d <tagname>可以删除一个本地标签；
+
+    命令git push origin :refs/tags/<tagname>可以删除一个远程标签。
+	
+总结：
+	如何参与一个开源项目呢？比如人气极高的bootstrap项目，这是一个非常强大的CSS框架，你可以访问它的项目主页https://github.com/twbs/bootstrap，点“Fork”就在自己的账号下克隆了一个bootstrap仓库，然后，从自己的账号下clone：
+
+git clone git@github.com:michaelliao/bootstrap.git    
+
+一定要从自己的账号下clone仓库，这样你才能推送修改。如果从bootstrap的作者的仓库地址git@github.com:twbs/bootstrap.git克隆，因为没有权限，你将不能推送修改。
+
+如果你希望bootstrap的官方库能接受你的修改，你就可以在GitHub上发起一个pull request。当然，对方是否接受你的pull request就不一定了。
+
+搭建服务器小结
+
+    搭建Git服务器非常简单，通常10分钟即可完成；
+
+    要方便管理公钥，用Gitosis；
+
+    要像SVN那样变态地控制权限，用Gitolite。
